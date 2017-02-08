@@ -41,7 +41,8 @@ module ReverseProxy
         path:       nil,
         username:   nil,
         password:   nil,
-        verify_ssl: true
+        verify_ssl: true,
+        read_timeout: nil
       )
 
       source_request = Rack::Request.new(env)
@@ -82,6 +83,7 @@ module ReverseProxy
       http_options = {}
       http_options[:use_ssl] = (uri.scheme == "https")
       http_options[:verify_mode] = OpenSSL::SSL::VERIFY_NONE if options[:verify_ssl]
+      http_options[:read_timeout] = options[:read_timeout] if options[:read_timeout]
 
       # Make the request
       Net::HTTP.start(uri.hostname, uri.port, http_options) do |http|
